@@ -1,0 +1,4 @@
+- Pages follow a split-export pattern: a `render[PageName]()` function returns an HTML template string, and an `init[PageName]()` function handles DOM event listeners and async data fetching.
+- UI components (Navbar, Footer, Toast) are implemented as pure functions that return HTML strings, with separate `init` functions for attaching event handlers after DOM injection.
+- Firestore interactions are centralized in `utils/firestore.js`, where each collection (e.g., questions, assessments) has dedicated async functions for CRUD operations using the modular Firebase v10+ SDK.
+- Styling relies on a 'Carbon Design' inspired utility class pattern (e.g., `carbon-card`, `carbon-button`) defined in `styles/main.css` to override and extend Tailwind defaults.

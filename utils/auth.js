@@ -1,13 +1,10 @@
 // ============================================================
 // utils/auth.js
-// Authentication helpers (Email/Password + Google OAuth)
+// Authentication helpers (Kode Akses for Users + Google OAuth for Admin)
 // ============================================================
 
 import { auth, db, googleProvider } from '../firebase-config.js';
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendEmailVerification,
   signInWithPopup,
   signOut,
   onAuthStateChanged as _onAuthStateChanged,
@@ -15,40 +12,47 @@ import {
 import {
   doc, setDoc, getDoc, serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { addAdmin, isAdminEmail } from './firestore.js';
+import { addAdmin, getAdminByEmail, deleteAdmin, findUserByKodeAkses } from './firestore.js';
 
-// ── Register new user (dengan Verifikasi Email) ──────────────────────
-export async function registerUser({ name, organization, email, password }) {
-  const cred = await createUserWithEmailAndPassword(auth, email, password);
-  const user = cred.user;
-  
-  // 1. Kirim Email Verifikasi
-  await sendEmailVerification(user);
+// ── Generate random 6-digit Kode Akses ──────────────────────────────
+function generateKodeAkses() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
 
-  // 2. Simpan profil ke Firestore
-  await setDoc(doc(db, 'users', user.uid), {
-    uid: user.uid, name, organization, email, role: 'user',
+// ── Generate simple UUID v4 ─────────────────────────────────────────
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+// ── Register new user (Kode Akses – no email/password) ──────────────
+export async function registerUser({ instansi, lamaBekerja, jabatan }) {
+  const uuid = generateUUID();
+  const kodeAkses = generateKodeAkses();
+
+  await setDoc(doc(db, 'users', uuid), {
+    uid: uuid,
+    instansi,
+    lamaBekerja,
+    jabatan,
+    kodeAkses,
+    role: 'user',
     createdAt: serverTimestamp(),
   });
 
-  // 3. Keluarkan user secara paksa agar tidak langsung login sebelum verifikasi
-  await signOut(auth);
-  return user;
+  return { uuid, kodeAkses, instansi, lamaBekerja, jabatan };
 }
 
-// ── Login (Wajib memvalidasi apakah Email sudah diverifikasi) ─────────
-export async function loginWithEmail(email, password) {
-  const cred = await signInWithEmailAndPassword(auth, email, password);
-  const user = cred.user;
-
-  // Cek apakah email sudah diverifikasi
-  if (!user.emailVerified) {
-    // Jika belum diverifikasi, keluarkan paksa dan lempar error
-    await signOut(auth);
-    throw new Error('Email Anda belum diverifikasi. Silakan periksa kotak masuk email Anda untuk melakukan verifikasi terlebih dahulu.');
+// ── Login with Kode Akses ───────────────────────────────────────────
+export async function loginWithKodeAkses(kodeAkses) {
+  const userProfile = await findUserByKodeAkses(kodeAkses);
+  if (!userProfile) {
+    throw new Error('Kode Akses tidak ditemukan. Pastikan kode yang Anda masukkan benar.');
   }
-
-  return user;
+  return userProfile;
 }
 
 // ── Google Sign-In (admin flow) ──────────────────────────────
@@ -64,14 +68,33 @@ export async function loginWithGoogle() {
     return { user, adminData: adminSnap.data() };
   }
 
-  // Fallback: allow whitelist by email (admins registered earlier with email-only)
+  // Fallback: allow whitelist by email (including manually added admins whose doc ID differs from auth UID)
   if (user.email) {
-    const emailWhitelisted = await isAdminEmail(user.email);
-    if (emailWhitelisted) {
-      // Create admin document keyed by UID for future quick checks
-      await addAdmin(user.uid, { name: user.displayName || '', email: user.email });
+    const adminRecord = await getAdminByEmail(user.email);
+    if (adminRecord) {
+      const fallbackName = adminRecord.name || user.displayName || '';
+      const fallbackEmail = adminRecord.email || user.email;
+      await addAdmin(user.uid, {
+        name: fallbackName,
+        email: fallbackEmail,
+      });
+
+      // Delete the email-based whitelist document to avoid duplicate admin records in list
+      if (adminRecord.id && adminRecord.id !== user.uid) {
+        try {
+          await deleteAdmin(adminRecord.id);
+        } catch (e) {
+          console.error("Gagal menghapus whitelist email lama:", e);
+        }
+      }
+
       const createdSnap = await getDoc(adminRef);
-      return { user, adminData: createdSnap.exists() ? createdSnap.data() : { uid: user.uid, name: user.displayName || '', email: user.email } };
+      return {
+        user,
+        adminData: createdSnap.exists()
+          ? createdSnap.data()
+          : { uid: user.uid, name: fallbackName, email: fallbackEmail },
+      };
     }
   }
 
@@ -80,16 +103,43 @@ export async function loginWithGoogle() {
   throw new Error('Akun Google Anda tidak terdaftar sebagai admin. Hubungi tim peneliti untuk mendapatkan akses.');
 }
 
-// ── Logout ───────────────────────────────────────────────────
+// ── Logout (Admin – Firebase signOut) ─────────────────────────
 export async function logout() {
   await signOut(auth);
 }
 
+// ── Logout User (clear localStorage) ──────────────────────────
+export function logoutUser() {
+  localStorage.removeItem('cgmi_user_session');
+}
+
+// ── Save user session to localStorage ─────────────────────────
+export function saveUserSession(profile) {
+  localStorage.setItem('cgmi_user_session', JSON.stringify(profile));
+}
+
+// ── Get user session from localStorage ────────────────────────
+export function getUserSession() {
+  try {
+    const raw = localStorage.getItem('cgmi_user_session');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 // ── Get current user role from Firestore ─────────────────────
 export async function getUserRole(uid) {
-  // Check admin first
+  // Check admin first by UID
   const adminSnap = await getDoc(doc(db, 'admins', uid));
   if (adminSnap.exists()) return 'admin';
+
+  // Check admin by current authenticated user's email
+  const currentUserEmail = auth.currentUser?.email;
+  if (currentUserEmail) {
+    const adminEmailSnap = await getDoc(doc(db, 'admins', currentUserEmail.toLowerCase()));
+    if (adminEmailSnap.exists()) return 'admin';
+  }
 
   // Check regular user
   const userSnap = await getDoc(doc(db, 'users', uid));
@@ -102,6 +152,12 @@ export async function getUserRole(uid) {
 export async function getUserProfile(uid) {
   const adminSnap = await getDoc(doc(db, 'admins', uid));
   if (adminSnap.exists()) return { ...adminSnap.data(), role: 'admin' };
+
+  const currentUserEmail = auth.currentUser?.email;
+  if (currentUserEmail) {
+    const adminEmailSnap = await getDoc(doc(db, 'admins', currentUserEmail.toLowerCase()));
+    if (adminEmailSnap.exists()) return { ...adminEmailSnap.data(), role: 'admin' };
+  }
 
   const userSnap = await getDoc(doc(db, 'users', uid));
   if (userSnap.exists()) return userSnap.data();

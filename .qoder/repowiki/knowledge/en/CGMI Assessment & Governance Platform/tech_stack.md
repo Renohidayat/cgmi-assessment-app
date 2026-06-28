@@ -1,0 +1,3 @@
+- **Frontend**: Vanilla JavaScript (ES Modules), Tailwind CSS (Play CDN), Chart.js for data visualization.
+- **Backend/Infra**: Firebase Hosting, Firestore (NoSQL), Firebase Authentication (Google Provider).
+- **Build/Dev**: `npx serve` for local development; no bundler (Webpack/Vite) used.

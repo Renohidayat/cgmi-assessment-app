@@ -15,7 +15,7 @@ export function renderAdminRespondents() {
     <!-- Action panel and search -->
     <div class="carbon-panel flex flex-col sm:flex-row gap-4 justify-between items-center">
       <div class="w-full sm:max-w-xs">
-        <input type="text" id="respondent-search" placeholder="Cari organisasi atau narahubung..." class="carbon-input text-xs">
+        <input type="text" id="respondent-search" placeholder="Cari instansi atau bidang..." class="carbon-input text-xs">
       </div>
       <button id="btn-export-csv" class="carbon-button text-xs w-full sm:w-auto">
         Ekspor CSV
@@ -29,8 +29,9 @@ export function renderAdminRespondents() {
           <thead class="bg-slate-50">
             <tr>
               <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">No</th>
-              <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Narahubung</th>
-              <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Organisasi</th>
+              <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Bidang</th>
+              <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Instansi</th>
+              <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Lama Bekerja</th>
               <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Skor</th>
               <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Kematangan</th>
               <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Aksi</th>
@@ -38,7 +39,7 @@ export function renderAdminRespondents() {
           </thead>
           <tbody id="respondents-tbody" class="bg-white divide-y divide-slate-100 text-xs text-slate-700">
             <tr>
-              <td colspan="6" class="px-6 py-10 text-center text-slate-400">Memuat data responden...</td>
+              <td colspan="7" class="px-6 py-10 text-center text-slate-400">Memuat data responden...</td>
             </tr>
           </tbody>
         </table>
@@ -102,7 +103,7 @@ export async function initAdminRespondents() {
   function renderTable(dataList) {
     if (!tbody) return;
     if (dataList.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">Tidak ada data responden ditemukan.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-slate-400">Tidak ada data responden ditemukan.</td></tr>`;
       return;
     }
 
@@ -111,6 +112,7 @@ export async function initAdminRespondents() {
         <td class="px-6 py-4 font-semibold text-slate-500">${i + 1}</td>
         <td class="px-6 py-4 font-bold text-slate-800">${a.userName || '-'}</td>
         <td class="px-6 py-4 font-semibold text-slate-700">${a.organization || '-'}</td>
+        <td class="px-6 py-4 text-slate-600">${a.lamaBekerja || '-'}</td>
         <td class="px-6 py-4 font-black text-[#161616]">${(a.totalAverageScore || 0).toFixed(2)}</td>
         <td class="px-6 py-4">
           <span class="carbon-badge text-xs" style="background: #eef4ff; border-color: #d8eafd; color: #0f62fe;">
@@ -164,8 +166,8 @@ export async function initAdminRespondents() {
     if (!modal) return;
     modal.classList.remove('hidden');
 
-    document.getElementById('modal-org-name').innerText = item.organization || 'Organisasi';
-    document.getElementById('modal-org-meta').innerText = `Narahubung: ${item.userName || '-'} (${item.userId})`;
+    document.getElementById('modal-org-name').innerText = item.organization || 'Instansi';
+    document.getElementById('modal-org-meta').innerText = `Bidang: ${item.userName || '-'} | Lama Bekerja: ${item.lamaBekerja || '-'}`;
     document.getElementById('modal-score-val').innerText = (item.totalAverageScore || 0).toFixed(2);
     document.getElementById('modal-maturity-val').innerText = item.maturityLevel || '-';
 

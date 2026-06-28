@@ -1,0 +1,1 @@
+A serverless single-page application for measuring inter-agency collaboration maturity using a hybrid authentication system and Firebase backend.

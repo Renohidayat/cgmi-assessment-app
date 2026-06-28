@@ -17,7 +17,7 @@ export function renderAdminAdmins() {
         <p class="text-xs text-[#525252]">Daftarkan akun Gmail tim peneliti baru agar dapat login melalui Google OAuth.</p>
       </div>
 
-      <form id="admin-whitelist-form" class="grid grid-cols-1 lg:grid-cols-4 gap-4 items-end">
+      <form id="admin-whitelist-form" class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-end">
         <div class="space-y-1">
           <label class="block text-xs font-semibold text-[#161616]">Nama Peneliti</label>
           <input type="text" id="whitelist-name" required placeholder="Contoh: Dr. Nindi"
@@ -26,11 +26,6 @@ export function renderAdminAdmins() {
         <div class="space-y-1">
           <label class="block text-xs font-semibold text-[#161616]">Alamat Google Gmail</label>
           <input type="email" id="whitelist-email" required placeholder="nama@gmail.com"
-            class="carbon-input text-xs">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-xs font-semibold text-[#161616]">UID Google (Opsional / Diisi otomatis)</label>
-          <input type="text" id="whitelist-uid" placeholder="UID unik akun Google"
             class="carbon-input text-xs">
         </div>
         <button type="submit" class="carbon-button w-full sm:w-auto text-xs">
@@ -50,13 +45,12 @@ export function renderAdminAdmins() {
             <tr>
               <th class="px-6 py-3.5">Nama</th>
               <th class="px-6 py-3.5">Surel (Email)</th>
-              <th class="px-6 py-3.5">UID Google</th>
               <th class="px-6 py-3.5">Aksi</th>
             </tr>
           </thead>
           <tbody id="admins-tbody">
             <tr>
-              <td colspan="4" class="px-6 py-10 text-center text-[#8c8c8c]">Memuat whitelist admin...</td>
+              <td colspan="3" class="px-6 py-10 text-center text-[#8c8c8c]">Memuat whitelist admin...</td>
             </tr>
           </tbody>
         </table>
@@ -93,11 +87,8 @@ export async function initAdminAdmins() {
       <tr>
         <td class="px-6 py-4 font-bold text-slate-800">${a.name || '-'}</td>
         <td class="px-6 py-4 font-semibold text-slate-600">${a.email || '-'}</td>
-        <td class="px-6 py-4 font-mono text-slate-500">${a.uid || '-'}</td>
         <td class="px-6 py-4">
-          <button data-uid="${a.uid}" class="carbon-button-danger text-xs btn-delete-admin">
-            Hapus
-          </button>
+          <button data-id="${a.id || a.uid}" class="carbon-button-danger text-xs btn-delete-admin">Cabut Akses</button>
         </td>
       </tr>
     `).join('');
@@ -105,10 +96,10 @@ export async function initAdminAdmins() {
     // Attach deletion handlers
     tbody.querySelectorAll('.btn-delete-admin').forEach(btn => {
       btn.addEventListener('click', async () => {
-        const uid = btn.getAttribute('data-uid');
+        const docId = btn.getAttribute('data-id');
         if (confirm('Apakah Anda yakin ingin mencabut hak akses admin untuk akun ini?')) {
           try {
-            await deleteAdmin(uid);
+            await deleteAdmin(docId);
             toast.success('Akses admin berhasil dicabut.');
             loadAdmins();
           } catch (err) {
@@ -123,23 +114,27 @@ export async function initAdminAdmins() {
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name  = document.getElementById('whitelist-name').value;
-      const email = document.getElementById('whitelist-email').value;
-      let uid     = document.getElementById('whitelist-uid').value.trim();
+      const name = document.getElementById('whitelist-name').value.trim();
+      const email = document.getElementById('whitelist-email').value.trim().toLowerCase();
 
-      // If user did not supply a UID manually, generate a deterministic or temporary string 
-      // which can be updated once the admin signs in, or act as the document key.
-      // Note: Google sign-in checks doc availability by auth.uid (which is the document ID).
-      // So if uid is not specified, we can use the email prefix or a generated key.
-      if (!uid) {
-        uid = 'google_uid_' + Math.random().toString(36).substring(2, 11);
+      if (!name || !email) {
+        toast.error('Nama dan alamat Gmail wajib diisi.');
+        return;
       }
 
+      const existingAdmin = adminList.some(a => (a.email || '').toLowerCase() === email);
+      if (existingAdmin) {
+        toast.error('Akun admin dengan email tersebut sudah terdaftar.');
+        return;
+      }
+
+      const docId = email;
+
       try {
-        await addAdmin(uid, { name, email });
+        await addAdmin(docId, { name, email });
         toast.success(`Admin "${name}" berhasil didaftarkan.`);
         form.reset();
-        loadAdmins();
+        await loadAdmins();
       } catch (err) {
         toast.error('Gagal mendaftarkan admin: ' + err.message);
       }

@@ -4,31 +4,33 @@ service cloud.firestore {
     
     // Whitelisted admin check helper
     function isAdmin() {
-      return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+      return request.auth != null && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
+      );
     }
 
-    // User Profile matching rule
+    // User profiles – public read/write (kode-akses auth, no Firebase Auth)
     match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
-      allow read: if isAdmin();
+      allow read, write: if true;
     }
 
-    // Admin whitelist collection rules
+    // Admin whitelist collection – admin only
     match /admins/{uid} {
       allow read: if request.auth != null;
       allow write: if isAdmin();
     }
 
-    // Survey questions rules
+    // Survey questions – public read, admin write
     match /questions/{qid} {
-      allow read: if request.auth != null;
+      allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Survey assessment submission rules
+    // Assessment submissions – public create/read, admin write
     match /assessments/{aid} {
-      allow create: if request.auth != null;
-      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if true;
+      allow read: if true;
       allow write: if isAdmin();
     }
   }

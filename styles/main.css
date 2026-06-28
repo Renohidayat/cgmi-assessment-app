@@ -44,12 +44,13 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--carbon-surface-1);
-  color: var(--carbon-ink);
+  background: #0a0a0a;
+  color: #e1e1ee;
+  overflow-x: hidden;
 }
 
 html, body {
-  background: var(--carbon-surface-1);
+  background: #0a0a0a;
 }
 
 button,
@@ -61,9 +62,6 @@ select {
 
 #app {
   width: 100%;
-  max-width: var(--carbon-max-width);
-  margin: 0 auto;
-  padding: 0 var(--carbon-spacing-md);
   opacity: 0;
   animation: fadeIn 0.2s ease-out forwards;
 }
@@ -254,6 +252,7 @@ nav.carbon-topbar button:hover {
   background: var(--carbon-canvas);
   border: 1px solid var(--carbon-hairline);
   border-radius: var(--carbon-radius-xs);
+  color: var(--carbon-ink);
 }
 
 .carbon-card {
@@ -292,6 +291,18 @@ nav.carbon-topbar button:hover {
   font-weight: 700;
 }
 
+@media (max-width: 1023px) {
+  .carbon-sidebar-link {
+    border-left: none !important;
+    border-bottom: 3px solid transparent;
+    padding: 8px 12px;
+  }
+  .carbon-sidebar-link.active {
+    border-left-color: transparent !important;
+    border-bottom-color: var(--carbon-primary);
+  }
+}
+
 .carbon-badge-primary {
   color: var(--carbon-primary);
   background: #eef4ff;
@@ -322,6 +333,8 @@ nav.carbon-topbar button:hover {
 
 .carbon-page-shell {
   padding: var(--carbon-spacing-xl) 0;
+  background: var(--carbon-surface-1);
+  min-height: 80vh;
 }
 
 .carbon-button,
@@ -549,16 +562,25 @@ nav.carbon-topbar button:hover {
 .carbon-modal-card {
   position: relative;
   width: min(100%, 640px);
+  max-height: 90vh;
+  overflow-y: auto;
   background: var(--carbon-canvas);
   border: 1px solid var(--carbon-hairline);
   border-radius: var(--carbon-radius-xs);
   padding: var(--carbon-spacing-lg);
+  color: var(--carbon-ink);
 }
 
 .carbon-grid-2 {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: var(--carbon-spacing-md);
+}
+
+@media (min-width: 480px) {
+  .carbon-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .carbon-meta-label {
@@ -667,4 +689,63 @@ nav.carbon-topbar button:hover {
 
 [class*="rounded-full"] {
   border-radius: 0 !important;
+}
+
+/* ============================================================
+   HOME PAGE STYLES (Google Stitch Design)
+   ============================================================ */
+
+.hero-overlay {
+  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.08) 0%, rgba(10, 10, 10, 0.92) 100%);
+}
+
+.marquee {
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-on-scroll.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.home-hero-highlight {
+  background: linear-gradient(to right, #0f62fe, #0050e6, #0f62fe);
+  background-size: 200% auto;
+  animation: gradientShift 6s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-highlight {
+    animation: none;
+    background-size: 100% auto;
+  }
 }

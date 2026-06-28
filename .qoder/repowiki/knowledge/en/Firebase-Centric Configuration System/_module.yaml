@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: configuration_system
+title: Firebase-Centric Configuration System
+scope: []
+source_files:
+    - firebase-config.js
+    - firebase.json
+    - firestore.rules
+    - .firebaserc
+    - firestore.indexes.json
+depends_on: []
+related_to: []

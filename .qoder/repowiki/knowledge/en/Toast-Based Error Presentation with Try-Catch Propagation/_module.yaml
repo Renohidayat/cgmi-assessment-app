@@ -1,0 +1,13 @@
+schema_version: 1
+module_path: error_handling
+title: Toast-Based Error Presentation with Try-Catch Propagation
+scope: []
+source_files:
+    - components/toast.js
+    - utils/auth.js
+    - utils/firestore.js
+    - pages/login.js
+    - pages/admin/admin-admins.js
+    - app.js
+depends_on: []
+related_to: []

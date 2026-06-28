@@ -1,0 +1,128 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: en-US
+branch: main
+nodes_managed: true
+exported_at: "2026-06-23T03:07:14Z"
+modules:
+    "":
+        dir_name: CGMI Assessment & Governance Platform
+        title: CGMI Assessment & Governance Platform
+        scope:
+            - README.md
+            - DESIGN.md
+            - implementation_plan.md
+            - .firebaserc
+            - firebase.json
+            - firestore.indexes.json
+            - firestore.rules
+            - package.json
+            - package-lock.json
+            - index.html
+            - app.js
+            - firebase-config.js
+            - firebase-run.js
+            - pages/
+            - components/
+            - utils/
+            - styles/
+            - .firebase\hosting..cache
+            - .vscode\settings.json
+            - assets\icon.svg
+            - assets\social-share.svg
+            - components\footer.js
+            - components\navbar.js
+            - components\toast.js
+            - console.error('Error
+            - d
+            - firebase
+            - images-removebg-preview.png
+            - node
+            - npm
+            - pages\about.js
+            - pages\admin\admin-admins.js
+            - pages\admin\admin-dashboard.js
+            - pages\admin\admin-layout.js
+            - pages\admin\admin-questions.js
+            - pages\admin\admin-respondents.js
+            - pages\assessment.js
+            - pages\dashboard.js
+            - pages\home.js
+            - pages\login.js
+            - pages\register.js
+            - styles\main.css
+            - utils\assessment-logic.js
+            - utils\auth.js
+            - utils\export.js
+            - utils\firestore.js
+            - '{'
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    build_system:
+        dir_name: Firebase Hosting & Static Serve Build System
+        title: Firebase Hosting & Static Serve Build System
+        scope: []
+        source_files:
+            - package.json
+            - firebase.json
+            - .firebaserc
+            - implementation_plan.md
+            - firestore.rules
+        children: []
+        depends_on: []
+        related_to: []
+    configuration_system:
+        dir_name: Firebase-Centric Configuration System
+        title: Firebase-Centric Configuration System
+        scope: []
+        source_files:
+            - firebase-config.js
+            - firebase.json
+            - firestore.rules
+            - .firebaserc
+            - firestore.indexes.json
+        children: []
+        depends_on: []
+        related_to: []
+    dependency_management:
+        dir_name: Hybrid Dependency Management npm for Tooling, CDN for Runtime
+        title: 'Hybrid Dependency Management: npm for Tooling, CDN for Runtime'
+        scope: []
+        source_files:
+            - package.json
+            - package-lock.json
+            - firebase-config.js
+            - firebase.json
+        children: []
+        depends_on: []
+        related_to: []
+    error_handling:
+        dir_name: Toast-Based Error Presentation with Try-Catch Propagation
+        title: Toast-Based Error Presentation with Try-Catch Propagation
+        scope: []
+        source_files:
+            - components/toast.js
+            - utils/auth.js
+            - utils/firestore.js
+            - pages/login.js
+            - pages/admin/admin-admins.js
+            - app.js
+        children: []
+        depends_on: []
+        related_to: []
+    frontend_style:
+        dir_name: IBM Carbon Design System Implementation
+        title: IBM Carbon Design System Implementation
+        scope: []
+        source_files:
+            - styles/main.css
+            - DESIGN.md
+            - index.html
+            - components/navbar.js
+            - pages/home.js
+            - pages/login.js
+        children: []
+        depends_on: []
+        related_to: []

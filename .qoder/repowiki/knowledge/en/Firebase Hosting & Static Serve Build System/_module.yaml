@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: build_system
+title: Firebase Hosting & Static Serve Build System
+scope: []
+source_files:
+    - package.json
+    - firebase.json
+    - .firebaserc
+    - implementation_plan.md
+    - firestore.rules
+depends_on: []
+related_to: []

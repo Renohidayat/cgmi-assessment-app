@@ -1,0 +1,13 @@
+schema_version: 1
+module_path: frontend_style
+title: IBM Carbon Design System Implementation
+scope: []
+source_files:
+    - styles/main.css
+    - DESIGN.md
+    - index.html
+    - components/navbar.js
+    - pages/home.js
+    - pages/login.js
+depends_on: []
+related_to: []

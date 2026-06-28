@@ -1,0 +1,5 @@
+- **Entry Point & Routing**: `index.html` loads `app.js` as an ES module, which implements a hash-based client-side router (`#/path`) with role-based guards (User vs Admin) in `handleRouting`.
+- **Hybrid Authentication**: Implements a dual-auth strategy where 'Users' authenticate via a generated 'Kode Akses' stored in `localStorage`, while 'Admins' use Firebase Google OAuth. `utils/auth.js` manages session merging and priority.
+- **Data Layer**: `utils/firestore.js` encapsulates all Firestore CRUD operations, interacting with collections for `users`, `admins`, `questions`, and `assessments`. Security is enforced via `firestore.rules`.
+- **UI Composition**: Uses a slot-based architecture in `index.html` (`#navbar-container`, `#app`, `#footer-container`). Pages are rendered as HTML strings by functions in `pages/` and injected into the main slot.
+- **Assessment Logic**: `utils/assessment-logic.js` contains the core domain logic, including 30 default questions across 6 dimensions, Likert scoring algorithms, and maturity level classification (Level 1-5).

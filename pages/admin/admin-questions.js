@@ -104,7 +104,15 @@ export async function initAdminQuestions() {
 
   async function loadQuestions() {
     try {
-      questions = await getQuestions();
+      const dbQuestions = await getQuestions();
+      // Sync fetched questions with local DEFAULT_QUESTIONS to apply updates
+      questions = dbQuestions.map(q => {
+        const localQ = DEFAULT_QUESTIONS.find(dq => dq.id === q.id);
+        if (localQ) {
+          return { ...q, text: localQ.text, dimension: localQ.dimension, dimensionKey: localQ.dimensionKey };
+        }
+        return q;
+      });
       renderTable(questions);
     } catch (err) {
       toast.error('Gagal mengambil kuesioner: ' + err.message);

@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  },
   "dependencies": {
     "firebase": "^12.15.0",
     "jsonwebtoken": "^9.0.3"

@@ -1,0 +1,2 @@
+- **Local Development**: Run `npm run dev` or `npm start` to launch the app via `npx serve .`.
+- **Firebase Deployment**: Requires `firebase login` and `firebase deploy` to push hosting rules and Firestore indexes defined in `firebase.json` and `firestore.indexes.json`.

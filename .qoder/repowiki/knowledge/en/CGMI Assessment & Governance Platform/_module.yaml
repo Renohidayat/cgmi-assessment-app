@@ -1,0 +1,54 @@
+schema_version: 1
+module_path: ""
+title: CGMI Assessment & Governance Platform
+scope:
+    - README.md
+    - DESIGN.md
+    - implementation_plan.md
+    - .firebaserc
+    - firebase.json
+    - firestore.indexes.json
+    - firestore.rules
+    - package.json
+    - package-lock.json
+    - index.html
+    - app.js
+    - firebase-config.js
+    - firebase-run.js
+    - pages/
+    - components/
+    - utils/
+    - styles/
+    - .firebase\hosting..cache
+    - .vscode\settings.json
+    - assets\icon.svg
+    - assets\social-share.svg
+    - components\footer.js
+    - components\navbar.js
+    - components\toast.js
+    - console.error('Error
+    - d
+    - firebase
+    - images-removebg-preview.png
+    - node
+    - npm
+    - pages\about.js
+    - pages\admin\admin-admins.js
+    - pages\admin\admin-dashboard.js
+    - pages\admin\admin-layout.js
+    - pages\admin\admin-questions.js
+    - pages\admin\admin-respondents.js
+    - pages\assessment.js
+    - pages\dashboard.js
+    - pages\home.js
+    - pages\login.js
+    - pages\register.js
+    - styles\main.css
+    - utils\assessment-logic.js
+    - utils\auth.js
+    - utils\export.js
+    - utils\firestore.js
+    - '{'
+source_files: []
+depends_on: []
+related_to: []

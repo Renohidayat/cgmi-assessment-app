@@ -12,12 +12,12 @@ import { getAuth, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCHsUYe1_4a2xY-rdQmncZTtyKAOQvr27I",
-  authDomain: "cgmi-assessment.firebaseapp.com",
-  projectId: "cgmi-assessment",
-  storageBucket: "cgmi-assessment.firebasestorage.app",
-  messagingSenderId: "918751923543",
-  appId: "1:918751923543:web:5cd816f2900db6a72bc212",
+  apiKey: "AIzaSyCWznT-WRGXz1Smz4bBFyei2YS800Q0QOk",
+  authDomain: "cgmi-assessmentt.firebaseapp.com",
+  projectId: "cgmi-assessmentt",
+  storageBucket: "cgmi-assessmentt.firebasestorage.app",
+  messagingSenderId: "278440968248",
+  appId: "1:278440968248:web:daabc7c333b840c907e6cd",
 };
 
 const app = initializeApp(firebaseConfig);

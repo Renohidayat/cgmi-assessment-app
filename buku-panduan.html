@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Buku Panduan – CGMI Assessment App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ── RESET ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --blue: #0f62fe;
+      --blue-h: #0050e6;
+      --ink: #161616;
+      --ink-m: #525252;
+      --ink-s: #8c8c8c;
+      --canvas: #ffffff;
+      --surf1: #f4f4f4;
+      --surf2: #e0e0e0;
+      --dark-bg: #0a0a0a;
+      --dark-card: #1d1f28;
+      --dark-border: #424656;
+      --dark-muted: #8c8c8c;
+      --success: #24a148;
+      --error: #da1e28;
+      --warn: #f1c21b;
+      --font: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      background: #111318;
+      color: #fff;
+      min-height: 100vh;
+      padding: 64px 16px 60px;
+    }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: #161616;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      min-height: 48px;
+    }
+
+    .toolbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: .02em;
+    }
+
+    .toolbar-brand svg {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .toolbar-sep {
+      width: 1px;
+      height: 24px;
+      background: rgba(255, 255, 255, .15);
+      margin: 0 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2px;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, .7);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      transition: all .15s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .print-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .print-btn:hover {
+      background: var(--blue-h);
+    }
+
+    /* ── SLIDES WRAPPER ── */
+    .slides {
+      margin: 20px auto 0;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .slide-wrap .slide-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6e7681;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* ── SLIDE BASE ── */
+    .slide {
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid #30363d;
+      scroll-margin-top: 64px;
+      transition: box-shadow .2s;
+    }
+
+    .slide:hover {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, .6);
+    }
+
+    /* ════════════════════════════════════════
+       SHARED REAL UI COMPONENTS
+    ════════════════════════════════════════ */
+    /* Navbar replica */
+    .r-nav {
+      background: #161616;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(10px, 2%, 24px);
+      height: clamp(32px, 6%, 48px);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .r-nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .r-nav-brand .logo {
+      width: clamp(14px, 2.2%, 22px);
+      height: clamp(14px, 2.2%, 22px);
+      background: linear-gradient(135deg, #0f172a, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(6px, .9vw, 9px);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .r-nav-brand .name {
+      font-size: clamp(8px, 1.1vw, 12px);
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: .06em;
+    }
+
+    .r-nav-brand .sep {
+      width: 1px;
+      height: clamp(10px, 1.5%, 18px);
+      background: rgba(255, 255, 255, .2);
+      margin: 0 4px;
+    }
+
+    .r-nav-brand .sub {
+      font-size: clamp(6px, .8vw, 9px);
+      color: rgba(255, 255, 255, .5);
+    }
+
+    .r-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .r-nav-link {
+      font-size: clamp(6px, .85vw, 10px);
+      color: rgba(255, 255, 255, .7);
+      padding: clamp(3px, .5%, 6px) clamp(5px, .8%, 10px);
+      border-radius: 9999px;
+    }
+
+    .r-nav-link.active {
+      background: rgba(255, 255, 255, .1);
+      color: #fff;
+    }
+
+    .r-nav-btn {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .15);
+      color: #fff;
+      font-size: clamp(6px, .8vw, 9px);
+      font-weight: 600;
+      padding: clamp(3px, .5%, 6px) clamp(8px, 1.2%, 14px);
+    }
+
+    /* Body area */
+    .r-body-light {
+      background: var(--surf1);
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .r-body-dark {
+      background: var(--dark-bg);
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── CARBON CARD (light) ── */
+    .c-card {
+      background: #fff;
+      border: 1px solid var(--surf2);
+      padding: clamp(8px, 1.5%, 20px);
+    }
+
+    .c-card-title {
+      font-size: clamp(12px, 1.8vw, 20px);
+      font-weight: 300;
+      color: var(--ink);
+    }
+
+    .c-card-desc {
+      font-size: clamp(7px, .9vw, 11px);
+      color: var(--ink-m);
+      margin-top: 3px;
+    }
+
+    .c-badge-blue {
+      font-size: clamp(6px, .75vw, 9px);
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    /* Progress bar */
+    .c-progress-wrap {
+      margin-top: clamp(6px, 1%, 14px);
+    }
+
+    .c-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: clamp(6px, .75vw, 8px);
+      font-weight: 600;
+      color: var(--ink-m);
+      margin-bottom: 3px;
+    }
+
+    .c-progress-track {
+      height: clamp(3px, .4%, 6px);
+      background: var(--surf2);
+      border: 1px solid var(--surf2);
+    }
+
+    .c-progress-fill {
+      height: 100%;
+      background: var(--blue);
+    }
+
+    /* Data diri card */
+    .c-section-title {
+      font-size: clamp(8px, 1.1vw, 13px);
+      font-weight: 700;
+      color: #1e3a5f;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      border-left: clamp(2px, .3%, 4px) solid var(--blue);
+      padding-left: clamp(5px, .7%, 10px);
+    }
+
+    .c-grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(6px, 1%, 14px);
+      margin-top: clamp(6px, 1%, 12px);
+    }
+
+    .c-field-label {
+      font-size: clamp(5px, .65vw, 8px);
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 2px;
+    }
+
+    .c-select {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid #8d8d8d;
+      background: var(--surf1);
+      padding: clamp(3px, .5%, 6px) 0;
+      font-size: clamp(6px, .8vw, 10px);
+      color: var(--ink);
+    }
+
+    .c-input-text {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid #8d8d8d;
+      background: transparent;
+      padding: clamp(3px, .5%, 6px) 0;
+      font-size: clamp(6px, .8vw, 10px);
+      color: #8d8d8d;
+    }
+
+    /* Question card */
+    .c-q-card {
+      background: #fff;
+      border: 1px solid var(--surf2);
+      padding: clamp(8px, 1.2%, 16px);
+    }
+
+    .c-q-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: clamp(16px, 2.2vw, 26px);
+      height: clamp(16px, 2.2vw, 26px);
+      border: 1px solid var(--surf2);
+      font-size: clamp(7px, .9vw, 11px);
+      font-weight: 600;
+      color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .c-q-text {
+      font-size: clamp(7px, .9vw, 11px);
+      color: var(--ink);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .c-likert {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: clamp(2px, .3%, 5px);
+      margin-top: clamp(5px, .7%, 10px);
+    }
+
+    .c-likert-opt {
+      border: 1px solid var(--surf2);
+      background: var(--surf1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: clamp(3px, .5%, 7px) 2px;
+      gap: 2px;
+    }
+
+    .c-likert-opt.selected {
+      background: #eef4ff;
+      border-color: #0f62fe;
+    }
+
+    .c-likert-label {
+      font-size: clamp(4px, .55vw, 7px);
+      font-weight: 600;
+      color: var(--ink-m);
+    }
+
+    .c-likert-radio {
+      width: clamp(8px, 1.2vw, 14px);
+      height: clamp(8px, 1.2vw, 14px);
+      border-radius: 50%;
+      border: 2px solid #8d8d8d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .c-likert-radio.checked {
+      border-color: var(--blue);
+    }
+
+    .c-likert-radio.checked::after {
+      content: '';
+      width: 40%;
+      height: 40%;
+      background: var(--blue);
+      border-radius: 50%;
+      display: block;
+    }
+
+    .c-likert-val {
+      font-size: clamp(7px, .9vw, 11px);
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* Submit panel */
+    .c-submit-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: clamp(6px, 1%, 14px) clamp(8px, 1.2%, 20px);
+      background: #fff;
+      border: 1px solid var(--surf2);
+    }
+
+    .c-submit-desc {
+      font-size: clamp(6px, .75vw, 9px);
+      color: var(--ink-m);
+      max-width: 50%;
+    }
+
+    .c-btn-blue {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      padding: clamp(5px, .8%, 10px) clamp(10px, 1.5%, 20px);
+      font-size: clamp(6px, .8vw, 10px);
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: default;
+    }
+
+    /* ── DARK CARD (dashboard) ── */
+    .d-card {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      padding: clamp(8px, 1.2%, 16px);
+    }
+
+    .d-card-label {
+      font-size: clamp(5px, .65vw, 8px);
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--dark-muted);
+    }
+
+    .d-card-big {
+      font-size: clamp(22px, 4vw, 48px);
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .d-card-unit {
+      font-size: clamp(9px, 1.3vw, 15px);
+      font-weight: 700;
+      color: var(--dark-muted);
+    }
+
+    .d-maturity-badge {
+      display: inline-block;
+      padding: clamp(2px, .3%, 4px) clamp(6px, .9%, 12px);
+      font-size: clamp(6px, .8vw, 10px);
+      font-weight: 600;
+      border: 1px solid var(--dark-border);
+      color: #b4c5ff;
+      background: rgba(15, 98, 254, .1);
+      margin-top: 4px;
+    }
+
+    .d-desc-box {
+      background: #11131c;
+      border: 1px solid var(--dark-border);
+      padding: clamp(5px, .8%, 10px);
+    }
+
+    .d-desc-title {
+      font-size: clamp(6px, .8vw, 10px);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+
+    .d-desc-text {
+      font-size: clamp(5px, .65vw, 8px);
+      color: var(--dark-muted);
+      line-height: 1.5;
+    }
+
+    /* Radar chart placeholder */
+    .d-radar-wrap {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      display: flex;
+      flex-direction: column;
+      padding: clamp(6px, 1%, 14px);
+    }
+
+    .d-radar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: clamp(4px, .6%, 8px);
+      border-bottom: 1px solid var(--dark-border);
+      margin-bottom: clamp(5px, .8%, 10px);
+    }
+
+    .d-radar-title {
+      font-size: clamp(7px, .9vw, 11px);
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .d-radar-badge {
+      font-size: clamp(5px, .65vw, 8px);
+      font-weight: 600;
+      letter-spacing: .2em;
+      color: var(--dark-muted);
+      border: 1px solid var(--dark-border);
+      padding: 2px 6px;
+    }
+
+    /* SVG radar chart (pure CSS) */
+    .radar-svg {
+      width: 100%;
+      max-height: clamp(80px, 14%, 140px);
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Rec item */
+    .d-rec-item {
+      background: #11131c;
+      padding: clamp(5px, .8%, 10px);
+      margin-bottom: clamp(4px, .6%, 8px);
+    }
+
+    .d-rec-head {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 3px;
+    }
+
+    .d-rec-icon {
+      font-size: clamp(8px, 1.1vw, 13px);
+    }
+
+    .d-rec-name {
+      font-size: clamp(7px, .9vw, 10px);
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .d-rec-score {
+      font-size: clamp(6px, .75vw, 8px);
+      color: var(--dark-muted);
+    }
+
+    .d-rec-text {
+      font-size: clamp(5px, .65vw, 8px);
+      color: var(--dark-muted);
+      line-height: 1.5;
+    }
+
+    /* Level badge colors */
+    .lv1 {
+      border-color: #ef4444 !important;
+      color: #fca5a5 !important;
+      background: rgba(239, 68, 68, .1) !important;
+    }
+
+    .lv2 {
+      border-color: #f97316 !important;
+      color: #fdba74 !important;
+      background: rgba(249, 115, 22, .1) !important;
+    }
+
+    .lv3 {
+      border-color: #eab308 !important;
+      color: #fde047 !important;
+      background: rgba(234, 179, 8, .1) !important;
+    }
+
+    .lv4 {
+      border-color: #3b82f6 !important;
+      color: #93c5fd !important;
+      background: rgba(59, 130, 246, .1) !important;
+    }
+
+    .lv5 {
+      border-color: #22c55e !important;
+      color: #86efac !important;
+      background: rgba(34, 197, 94, .1) !important;
+    }
+
+    /* ── COVER SLIDE ── */
+    #s-cover {
+      background: linear-gradient(135deg, var(--dark-bg) 0%, #0a1628 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cover-hero {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-left {
+      background: #161616;
+      border-right: 1px solid rgba(255, 255, 255, .08);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(16px, 3%, 48px);
+    }
+
+    .cover-eyebrow {
+      font-size: clamp(6px, .8vw, 9px);
+      font-weight: 600;
+      color: var(--blue);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .cover-h1 {
+      font-size: clamp(24px, 4.5vw, 52px);
+      font-weight: 300;
+      color: #fff;
+      line-height: 1.0;
+    }
+
+    .cover-h1 strong {
+      font-weight: 700;
+    }
+
+    .cover-sub {
+      font-size: clamp(8px, 1.1vw, 12px);
+      color: rgba(255, 255, 255, .5);
+      margin-top: 10px;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .cover-right {
+      background: var(--blue);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: clamp(16px, 3%, 48px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-right::before {
+      content: '';
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: clamp(80px, 15%, 160px);
+      height: clamp(80px, 15%, 160px);
+      background: rgba(255, 255, 255, .06);
+      border-radius: 50%;
+    }
+
+    .cover-app {
+      font-size: clamp(9px, 1.2vw, 13px);
+      color: rgba(255, 255, 255, .6);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .cover-appname {
+      font-size: clamp(28px, 5.5vw, 60px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.0;
+      letter-spacing: -.02em;
+    }
+
+    .cover-appfull {
+      font-size: clamp(8px, 1.1vw, 13px);
+      color: rgba(255, 255, 255, .7);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .cover-footer {
+      background: rgba(0, 0, 0, .4);
+      border-top: 1px solid rgba(255, 255, 255, .08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: clamp(5px, .8%, 10px) clamp(14px, 2%, 28px);
+      font-size: clamp(6px, .8vw, 10px);
+      color: rgba(255, 255, 255, .4);
+      font-weight: 500;
+    }
+
+    .cover-dot {
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, .2);
+      border-radius: 50%;
+    }
+
+    /* ── INTRO / TEXT SLIDES ── */
+    .s-intro {
+      background: #0d1117;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .s-intro-body {
+      flex: 1;
+      padding: clamp(14px, 2.5%, 36px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(8px, 1.4%, 18px);
+      overflow: hidden;
+    }
+
+    .s-page-title {
+      font-size: clamp(12px, 1.8vw, 20px);
+      font-weight: 700;
+      color: #fff;
+      border-bottom: 2px solid var(--blue);
+      padding-bottom: 6px;
+      display: inline-block;
+    }
+
+    .s-body-text {
+      font-size: clamp(7px, .95vw, 11px);
+      color: rgba(255, 255, 255, .75);
+      line-height: 1.7;
+      text-align: justify;
+    }
+
+    /* Outline timeline */
+    #s-outline {
+      background: #0d1117;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .outline-hdr {
+      background: var(--surf2);
+      color: var(--ink);
+      text-align: center;
+      padding: clamp(6px, 1%, 14px);
+      font-size: clamp(11px, 1.6vw, 18px);
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
+
+    .outline-body {
+      flex: 1;
+      background: #1a2535;
+      padding: clamp(12px, 2%, 28px) clamp(16px, 3%, 40px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tl {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      position: relative;
+    }
+
+    .tl::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 2px;
+      background: rgba(255, 255, 255, .15);
+    }
+
+    .tl-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tl-node.bot {
+      flex-direction: column-reverse;
+    }
+
+    .tl-circ {
+      width: clamp(24px, 3.5%, 42px);
+      height: clamp(24px, 3.5%, 42px);
+      background: #fff;
+      color: #1a2535;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(9px, 1.3vw, 14px);
+      font-weight: 900;
+    }
+
+    .tl-conn {
+      width: 2px;
+      height: clamp(8px, 1.5%, 18px);
+      background: rgba(255, 255, 255, .3);
+    }
+
+    .tl-box {
+      background: rgba(255, 255, 255, .07);
+      padding: clamp(4px, .7%, 9px);
+      min-width: clamp(70px, 11%, 120px);
+      border: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .tl-box-t {
+      font-size: clamp(7px, .9vw, 10px);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .tl-box-s {
+      font-size: clamp(5px, .65vw, 7.5px);
+      color: rgba(255, 255, 255, .55);
+      line-height: 1.4;
+    }
+
+    /* Section divider */
+    .s-divider {
+      background: #0a1628;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      text-align: center;
+      padding: clamp(20px, 4%, 60px);
+    }
+
+    .s-divider-h1 {
+      font-size: clamp(14px, 2.2vw, 24px);
+      font-weight: 700;
+      color: #fff;
+      text-decoration: underline;
+      text-underline-offset: 6px;
+      text-decoration-color: var(--blue);
+    }
+
+    .s-divider-h2 {
+      font-size: clamp(12px, 1.8vw, 20px);
+      font-weight: 600;
+      color: rgba(255, 255, 255, .7);
+    }
+
+    .s-divider-h3 {
+      font-size: clamp(11px, 1.6vw, 18px);
+      font-weight: 600;
+      color: rgba(255, 255, 255, .55);
+    }
+
+    /* Step slides with two columns */
+    .s-step {
+      background: #0d1117;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .s-step-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(10px, 1.8%, 20px);
+      padding: clamp(10px, 1.8%, 22px);
+      overflow: hidden;
+    }
+
+    .s-step-left {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(6px, 1%, 12px);
+    }
+
+    .s-step-right {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(6px, 1%, 12px);
+    }
+
+    .s-step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: clamp(18px, 2.5vw, 30px);
+      height: clamp(18px, 2.5vw, 30px);
+      background: var(--blue);
+      color: #fff;
+      border-radius: 50%;
+      font-size: clamp(9px, 1.2vw, 14px);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .s-step-title {
+      font-size: clamp(10px, 1.4vw, 16px);
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .s-step-desc {
+      font-size: clamp(7px, .9vw, 10px);
+      color: rgba(255, 255, 255, .7);
+      line-height: 1.6;
+    }
+
+    .s-step-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .s-step-list li {
+      display: flex;
+      gap: 5px;
+      align-items: flex-start;
+    }
+
+    .s-step-list li .nb {
+      width: clamp(13px, 1.8vw, 18px);
+      height: clamp(13px, 1.8vw, 18px);
+      flex-shrink: 0;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(5px, .65vw, 8px);
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .s-step-list li span {
+      font-size: clamp(6px, .8vw, 10px);
+      color: rgba(255, 255, 255, .75);
+      line-height: 1.5;
+    }
+
+    .callout {
+      border-left: clamp(2px, .3%, 3px) solid;
+      padding: clamp(4px, .6%, 8px) clamp(6px, 1%, 12px);
+      margin-top: auto;
+    }
+
+    .callout-warn {
+      border-color: #f1c21b;
+      background: rgba(241, 194, 27, .08);
+    }
+
+    .callout-info {
+      border-color: var(--blue);
+      background: rgba(15, 98, 254, .08);
+    }
+
+    .callout-ok {
+      border-color: var(--success);
+      background: rgba(36, 161, 72, .08);
+    }
+
+    .callout-err {
+      border-color: var(--error);
+      background: rgba(218, 30, 40, .08);
+    }
+
+    .callout-t {
+      font-size: clamp(6px, .8vw, 9px);
+      font-weight: 700;
+    }
+
+    .callout-t.warn {
+      color: #f1c21b;
+    }
+
+    .callout-t.info {
+      color: #82cfff;
+    }
+
+    .callout-t.ok {
+      color: #42be65;
+    }
+
+    .callout-t.err {
+      color: #ff8389;
+    }
+
+    .callout-d {
+      font-size: clamp(5px, .65vw, 8px);
+      color: rgba(255, 255, 255, .65);
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+
+    /* URL highlight box */
+    .url-box {
+      background: rgba(15, 98, 254, .1);
+      border: 1px solid rgba(15, 98, 254, .3);
+      padding: clamp(5px, .8%, 10px);
+      margin: 4px 0;
+    }
+
+    .url-box-l {
+      font-size: clamp(5px, .65vw, 7px);
+      color: rgba(255, 255, 255, .5);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .url-box-v {
+      font-size: clamp(9px, 1.3vw, 15px);
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    /* ── NOTES SLIDE ── */
+    #s-notes {
+      background: #0a1628;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .notes-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(8px, 1.2%, 16px);
+      padding: clamp(10px, 1.8%, 22px);
+    }
+
+    .note-card {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-left: clamp(2px, .3%, 4px) solid;
+      padding: clamp(7px, 1.2%, 14px);
+    }
+
+    .note-card.y {
+      border-left-color: #f1c21b;
+    }
+
+    .note-card.g {
+      border-left-color: var(--success);
+    }
+
+    .note-card.b {
+      border-left-color: var(--blue);
+    }
+
+    .note-card.p {
+      border-left-color: #a855f7;
+    }
+
+    .note-icon {
+      font-size: clamp(14px, 2.2vw, 26px);
+    }
+
+    .note-title {
+      font-size: clamp(8px, 1.1vw, 13px);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .note-card.y .note-title {
+      color: #f1c21b;
+    }
+
+    .note-card.g .note-title {
+      color: #42be65;
+    }
+
+    .note-card.b .note-title {
+      color: #82cfff;
+    }
+
+    .note-card.p .note-title {
+      color: #d8b4fe;
+    }
+
+    .note-text {
+      font-size: clamp(6px, .8vw, 9px);
+      color: rgba(255, 255, 255, .65);
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+
+    /* ── THANK YOU ── */
+    #s-ty {
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: clamp(8px, 1.5%, 20px);
+      text-align: center;
+      padding: clamp(20px, 4%, 60px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #s-ty::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, .2) 0%, transparent 60%);
+    }
+
+    .ty-h {
+      font-size: clamp(28px, 6vw, 64px);
+      font-weight: 900;
+      color: #fff;
+      position: relative;
+      letter-spacing: -.02em;
+    }
+
+    .ty-line {
+      width: 60px;
+      height: 3px;
+      background: rgba(255, 255, 255, .4);
+      position: relative;
+    }
+
+    .ty-sub {
+      font-size: clamp(9px, 1.3vw, 14px);
+      color: rgba(255, 255, 255, .8);
+      max-width: 500px;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    .ty-url {
+      font-size: clamp(8px, 1.1vw, 12px);
+      color: rgba(255, 255, 255, .6);
+      font-weight: 600;
+      position: relative;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      .toolbar,
+      .print-btn {
+        display: none !important;
+      }
+
+      .slides {
+        margin-top: 0;
+        gap: 0;
+        max-width: 100%;
+      }
+
+      .slide {
+        page-break-after: always;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-brand">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bg2" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="#0f172a" />
+            <stop offset="100%" stop-color="#2563eb" />
+          </linearGradient>
+          <linearGradient id="ac2" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="#38bdf8" />
+            <stop offset="100%" stop-color="#22c55e" />
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="0" fill="url(#bg2)" />
+        <path d="M20 20h11a8 8 0 0 1 0 16H20zm0 12h13a6 6 0 0 1 0 12H20z" fill="url(#ac2)" opacity=".92" />
+        <path d="M43 20h4v24h-4z" fill="#e2e8f0" opacity=".95" />
+      </svg>
+      <span>CGMI</span>
+      <div class="toolbar-sep"></div>
+      <span style="color:rgba(255,255,255,.5);font-size:12px;">Collaboration Governance Maturity Index</span>
+    </div>
+    <div class="nav-links">
+      <a href="#s-cover">Cover</a>
+      <a href="#s-intro1">Pendahuluan</a>
+      <a href="#s-outline">Outline</a>
+      <a href="#s-step1">Langkah 1</a>
+      <a href="#s-step2">Langkah 2</a>
+      <a href="#s-step3">Langkah 3</a>
+      <a href="#s-step4">Langkah 4</a>
+      <a href="#s-step5">Langkah 5</a>
+      <a href="#s-step6">Hasil</a>
+      <a href="#s-notes">Catatan</a>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨️ Cetak / PDF</button>
+  </div>
+
+  <div class="slides">
+
+    <!-- ═══════ SLIDE 1: COVER ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Cover</div>
+      <div class="slide" id="s-cover" style="display:flex;flex-direction:column;">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div>
+            <span class="name">CGMI</span>
+            <div class="sep"></div>
+            <span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links">
+            <span class="r-nav-link active">Beranda</span>
+            <span class="r-nav-link">Tentang</span>
+            <span class="r-nav-link">Mulai Asesmen</span>
+          </div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div class="cover-hero">
+          <div class="cover-left">
+            <div class="cover-eyebrow">Buku Panduan Pengguna</div>
+            <div class="cover-h1">BUKU<br /><strong>PANDUAN</strong></div>
+            <div class="cover-sub">Panduan resmi penggunaan aplikasi pengukuran tata kelola kolaborasi instansi
+              pemerintah daerah Kabupaten Sumedang</div>
+          </div>
+          <div class="cover-right">
+            <div class="cover-app">Platform Digital · Versi 1.0</div>
+            <div class="cover-appname">CGMI</div>
+            <div class="cover-appfull">Collaboration Governance<br />Maturity Index</div>
+          </div>
+        </div>
+        <div class="cover-footer">
+          <span>🌐 cgmi-assessmentt.web.app</span>
+          <div class="cover-dot"></div>
+          <span>Kabupaten Sumedang · 2026</span>
+          <div class="cover-dot"></div>
+          <span>© CGMI Assessment App</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 2: PENDAHULUAN (1) ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 1 – Pendahuluan (1)</div>
+      <div class="slide s-intro" id="s-intro1">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span
+              class="r-nav-link active">Tentang</span><span class="r-nav-link">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div class="s-intro-body">
+          <div class="s-page-title">PENDAHULUAN <span style="font-weight:300;color:rgba(255,255,255,.5);">(1)</span>
+          </div>
+          <!-- Hero image replica -->
+          <div
+            style="background:#0a1628;border:1px solid rgba(255,255,255,.08);padding:clamp(8px,1.4%,18px);display:flex;align-items:center;gap:clamp(10px,2%,24px);position:relative;overflow:hidden;">
+            <div style="flex:1;">
+              <div
+                style="font-size:clamp(6px,.8vw,9px);font-weight:600;color:var(--blue);letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px;">
+                ASESMEN KEMATANGAN TATA KELOLA KOLABORASI</div>
+              <div style="font-size:clamp(14px,2.5vw,30px);font-weight:300;color:#fff;line-height:1.1;">
+                Collaboration<br />Governance</div>
+              <div
+                style="display:inline-block;background:var(--blue);padding:clamp(3px,.5%,7px) clamp(8px,1.2%,18px);margin-top:4px;">
+                <span style="font-size:clamp(11px,1.8vw,22px);font-weight:700;color:#fff;">Maturity Index</span>
+              </div>
+              <div style="font-size:clamp(6px,.8vw,9px);color:rgba(255,255,255,.5);margin-top:6px;">Standar pengukuran
+                performa kolaborasi antar-instansi berbasis data</div>
+            </div>
+            <div style="flex-shrink:0;display:flex;gap:4px;">
+              <div
+                style="background:rgba(15,98,254,.15);border:1px solid rgba(15,98,254,.3);padding:clamp(5px,.8%,12px);min-width:clamp(50px,8%,90px);text-align:center;">
+                <div style="font-size:clamp(7px,1vw,13px);font-weight:900;color:#fff;">📊</div>
+                <div style="font-size:clamp(5px,.65vw,7px);color:rgba(255,255,255,.6);margin-top:2px;">6 Dimensi</div>
+              </div>
+              <div
+                style="background:rgba(36,161,72,.15);border:1px solid rgba(36,161,72,.3);padding:clamp(5px,.8%,12px);min-width:clamp(50px,8%,90px);text-align:center;">
+                <div style="font-size:clamp(7px,1vw,13px);font-weight:900;color:#fff;">📝</div>
+                <div style="font-size:clamp(5px,.65vw,7px);color:rgba(255,255,255,.6);margin-top:2px;">30 Soal</div>
+              </div>
+              <div
+                style="background:rgba(241,194,27,.1);border:1px solid rgba(241,194,27,.3);padding:clamp(5px,.8%,12px);min-width:clamp(50px,8%,90px);text-align:center;">
+                <div style="font-size:clamp(7px,1vw,13px);font-weight:900;color:#fff;">🏆</div>
+                <div style="font-size:clamp(5px,.65vw,7px);color:rgba(255,255,255,.6);margin-top:2px;">5 Level</div>
+              </div>
+            </div>
+          </div>
+          <div class="s-body-text">CGMI Assessment App adalah platform digital berbasis web yang dirancang khusus untuk
+            mengukur tingkat kematangan tata kelola kolaborasi antar instansi pemerintah daerah secara terstruktur dan
+            objektif. Platform ini menyediakan instrumen kuesioner penilaian mandiri (self-assessment) bagi pejabat dan
+            staf di lingkungan Pemerintah Kabupaten Sumedang, mencakup 6 dimensi utama kolaborasi: Kepemimpinan,
+            Pengambilan Keputusan, Transparansi, Manajemen Risiko, Pengelolaan Sumber Daya, serta Kinerja dan Evaluasi.
+            Hasil pengukuran ditampilkan melalui dashboard interaktif dengan visualisasi radar chart dan rekomendasi
+            tindakan yang disesuaikan dengan level kematangan masing-masing dimensi.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 3: PENDAHULUAN (2) ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 2 – Pendahuluan (2)</div>
+      <div class="slide s-intro" id="s-intro2">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span
+              class="r-nav-link active">Tentang</span><span class="r-nav-link">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div class="s-intro-body" style="gap:clamp(6px,1%,12px);">
+          <div class="s-page-title">PENDAHULUAN <span style="font-weight:300;color:rgba(255,255,255,.5);">(2)</span>
+          </div>
+          <div class="s-body-text">Pada platform CGMI Assessment App, responden diarahkan untuk mengisi seluruh
+            rangkaian kuesioner CGMI secara lengkap. Hasil asesmen dapat dilihat pada Dashboard setelah semua 30
+            pertanyaan (6 dimensi) terisi dan formulir berhasil dikirimkan, ditandai dengan progress bar <strong
+              style="color:#fff;">100% Terjawab</strong>.</div>
+          <!-- Contoh section – replicates the assessment page layout -->
+          <div style="position:relative;">
+            <div
+              style="display:inline-block;background:var(--warn);color:#000;font-size:clamp(7px,.9vw,10px);font-weight:800;padding:2px 10px;margin-bottom:5px;">
+              Contoh</div>
+            <div style="background:#fff;border:1px solid var(--surf2);">
+              <!-- mini navbar of assessment page -->
+              <div
+                style="background:#161616;display:flex;align-items:center;padding:clamp(3px,.5%,6px) clamp(8px,1.2%,14px);gap:8px;border-bottom:1px solid rgba(255,255,255,.08);">
+                <span style="font-size:clamp(6px,.8vw,9px);font-weight:600;color:#fff;">CGMI</span>
+                <span style="color:rgba(255,255,255,.2);font-size:clamp(6px,.8vw,9px);">|</span>
+                <span style="font-size:clamp(5px,.65vw,7px);color:rgba(255,255,255,.4);">Collaboration Governance
+                  Maturity Index</span>
+                <div style="margin-left:auto;display:flex;gap:4px;">
+                  <span style="font-size:clamp(5px,.65vw,7px);color:rgba(255,255,255,.5);">Beranda</span>
+                  <span style="font-size:clamp(5px,.65vw,7px);color:rgba(255,255,255,.5);">Tentang</span>
+                  <span
+                    style="font-size:clamp(5px,.65vw,7px);color:#fff;background:rgba(255,255,255,.1);padding:1px 5px;border-radius:9999px;">Mulai
+                    Asesmen</span>
+                </div>
+              </div>
+              <!-- assessment card top -->
+              <div
+                style="background:var(--surf1);padding:clamp(5px,.8%,10px);display:flex;justify-content:space-between;align-items:flex-start;">
+                <div>
+                  <div style="font-size:clamp(9px,1.3vw,16px);font-weight:300;color:var(--ink);">Kuesioner CGMI</div>
+                  <div style="font-size:clamp(5px,.65vw,7px);color:var(--ink-m);margin-top:1px;">Isi instrumen dengan
+                    memilih skala kesetujuan yang paling mencerminkan kondisi riil organisasi Anda.</div>
+                </div>
+                <div style="font-size:clamp(5px,.65vw,8px);font-weight:600;color:var(--blue);">6 Dimensi Kolaborasi
+                </div>
+              </div>
+              <!-- progress -->
+              <div
+                style="background:var(--surf1);padding:clamp(3px,.5%,6px) clamp(5px,.8%,10px);border-top:1px solid var(--surf2);">
+                <div
+                  style="display:flex;justify-content:space-between;font-size:clamp(5px,.6vw,7px);font-weight:600;color:var(--ink-m);margin-bottom:2px;">
+                  <span>Progres Asesmen</span><span>100% Terjawab (30/30)</span>
+                </div>
+                <div style="height:clamp(2px,.3%,4px);background:var(--surf2);">
+                  <div style="width:100%;height:100%;background:var(--blue);"></div>
+                </div>
+              </div>
+              <!-- dimension list snippet -->
+              <div
+                style="background:var(--surf1);padding:clamp(3px,.5%,6px) clamp(5px,.8%,10px);display:flex;gap:4px;border-top:1px solid var(--surf2);">
+                <div
+                  style="flex:1;border-left:clamp(2px,.3%,3px) solid var(--blue);padding-left:4px;font-size:clamp(5px,.65vw,7px);font-weight:700;color:var(--ink);text-transform:uppercase;">
+                  Kepemimpinan</div>
+                <div
+                  style="flex:1;border-left:clamp(2px,.3%,3px) solid var(--blue);padding-left:4px;font-size:clamp(5px,.65vw,7px);font-weight:700;color:var(--ink);text-transform:uppercase;">
+                  Pengambilan Kep.</div>
+                <div
+                  style="flex:1;border-left:clamp(2px,.3%,3px) solid var(--blue);padding-left:4px;font-size:clamp(5px,.65vw,7px);font-weight:700;color:var(--ink);text-transform:uppercase;">
+                  Transparansi</div>
+                <div
+                  style="flex:1;border-left:clamp(2px,.3%,3px) solid var(--blue);padding-left:4px;font-size:clamp(5px,.65vw,7px);font-weight:700;color:var(--ink);text-transform:uppercase;">
+                  Manajemen Risiko</div>
+                <div
+                  style="flex:1;border-left:clamp(2px,.3%,3px) solid var(--blue);padding-left:4px;font-size:clamp(5px,.65vw,7px);font-weight:700;color:var(--ink);text-transform:uppercase;">
+                  Pengelolaan SDM</div>
+                <div
+                  style="flex:1;border-left:clamp(2px,.3%,3px) solid var(--blue);padding-left:4px;font-size:clamp(5px,.65vw,7px);font-weight:700;color:var(--ink);text-transform:uppercase;">
+                  Kinerja & Evaluasi</div>
+              </div>
+            </div>
+            <!-- circle annotations -->
+            <div style="position:absolute;right:-8px;top:34px;display:flex;flex-direction:column;gap:4px;">
+              <div
+                style="width:clamp(14px,2vw,20px);height:clamp(14px,2vw,20px);background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(6px,.8vw,9px);font-weight:800;color:#fff;">
+                1</div>
+              <div
+                style="width:clamp(14px,2vw,20px);height:clamp(14px,2vw,20px);background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(6px,.8vw,9px);font-weight:800;color:#fff;">
+                2</div>
+              <div
+                style="width:clamp(14px,2vw,20px);height:clamp(14px,2vw,20px);background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(6px,.8vw,9px);font-weight:800;color:#fff;">
+                3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 4: OUTLINE ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 3 – Outline Asesmen</div>
+      <div class="slide" id="s-outline">
+        <div class="outline-hdr">OUTLINE ASESMEN CGMI</div>
+        <div class="outline-body">
+          <div class="tl">
+            <div class="tl-node">
+              <div class="tl-box">
+                <div class="tl-box-t">1. Akses Platform</div>
+                <div class="tl-box-s">Buka URL di browser</div>
+              </div>
+              <div class="tl-conn"></div>
+              <div class="tl-circ">1</div>
+            </div>
+            <div class="tl-node bot">
+              <div class="tl-box">
+                <div class="tl-box-t">2. Isi Data Diri</div>
+                <div class="tl-box-s">Instansi, Lama Bekerja,<br />Bidang Jabatan</div>
+              </div>
+              <div class="tl-conn"></div>
+              <div class="tl-circ">2</div>
+            </div>
+            <div class="tl-node">
+              <div class="tl-box">
+                <div class="tl-box-t">3. Isi Kuesioner</div>
+                <div class="tl-box-s">30 pertanyaan<br />6 dimensi Likert 1–5</div>
+              </div>
+              <div class="tl-conn"></div>
+              <div class="tl-circ">3</div>
+            </div>
+            <div class="tl-node bot">
+              <div class="tl-box">
+                <div class="tl-box-t">4. Kirim Asesmen</div>
+                <div class="tl-box-s">Pastikan 100% terjawab<br />klik Kirim Asesmen</div>
+              </div>
+              <div class="tl-conn"></div>
+              <div class="tl-circ">4</div>
+            </div>
+            <div class="tl-node">
+              <div class="tl-box">
+                <div class="tl-box-t">5. Lihat Dashboard</div>
+                <div class="tl-box-s">Skor, level kematangan<br />radar chart, rekomendasi</div>
+              </div>
+              <div class="tl-conn"></div>
+              <div class="tl-circ">5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 5: SECTION DIVIDER ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 4 – Judul Langkah-Langkah</div>
+      <div class="slide s-divider" id="s-div1">
+        <div class="r-nav" style="position:absolute;top:0;left:0;right:0;z-index:2;">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span class="r-nav-link">Tentang</span><span
+              class="r-nav-link">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div class="s-divider-h1">LANGKAH-LANGKAH MENGGUNAKAN</div>
+        <div class="s-divider-h2">CGMI ASSESSMENT APP</div>
+        <div class="s-divider-h3">Collaborative Governance Maturity Index</div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 6: LANGKAH 1 – Akses URL ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 5 – Langkah 1: Akses Platform</div>
+      <div class="slide s-step" id="s-step1">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link active">Beranda</span><span
+              class="r-nav-link">Tentang</span><span class="r-nav-link">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div
+          style="padding:clamp(6px,1%,14px) clamp(10px,1.8%,22px);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;">
+          <div class="s-step-num">1</div>
+          <div class="s-step-title">Masuk ke Aplikasi CGMI Assessment</div>
+        </div>
+        <div class="s-step-body">
+          <div class="s-step-left">
+            <div class="s-step-desc">Buka browser (Google Chrome, Edge, atau Firefox) dan ketikkan alamat URL aplikasi
+              CGMI pada bilah alamat:</div>
+            <div class="url-box">
+              <div class="url-box-l">🌐 URL Aplikasi</div>
+              <div class="url-box-v">cgmi-assessmentt.web.app</div>
+            </div>
+            <ul class="s-step-list">
+              <li><span class="nb">1</span><span>Pastikan perangkat terhubung ke internet dengan koneksi yang
+                  stabil</span></li>
+              <li><span class="nb">2</span><span>Gunakan browser versi terbaru (Chrome 90+, Edge 90+, Firefox
+                  88+)</span></li>
+              <li><span class="nb">3</span><span>Halaman utama CGMI akan tampil otomatis setelah URL diakses</span></li>
+            </ul>
+            <div class="callout callout-info">
+              <div class="callout-t info">💡 Tips</div>
+              <div class="callout-d">Tambahkan alamat ini ke bookmark browser agar mudah diakses kembali.</div>
+            </div>
+          </div>
+          <div class="s-step-right">
+            <!-- Replica of the actual home page -->
+            <div
+              style="background:#0a0a0a;border:1px solid rgba(255,255,255,.08);flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;">
+              <div
+                style="position:absolute;inset:0;background:radial-gradient(ellipse at 60% 50%, rgba(15,98,254,.12) 0%, transparent 70%);pointer-events:none;">
+              </div>
+              <div
+                style="padding:clamp(8px,1.4%,20px);flex:1;display:flex;flex-direction:column;justify-content:center;">
+                <div
+                  style="font-size:clamp(5px,.65vw,8px);font-weight:600;color:var(--blue);letter-spacing:.15em;text-transform:uppercase;margin-bottom:5px;">
+                  ASESMEN KEMATANGAN TATA KELOLA KOLABORASI</div>
+                <div
+                  style="font-size:clamp(14px,2.8vw,36px);font-weight:300;color:#fff;line-height:1.05;margin-bottom:4px;">
+                  Collaboration<br />Governance</div>
+                <div
+                  style="background:var(--blue);display:inline-block;padding:clamp(2px,.3%,5px) clamp(6px,1%,14px);margin-bottom:8px;">
+                  <span style="font-size:clamp(12px,2.2vw,28px);font-weight:700;color:#fff;">Maturity Index</span>
+                </div>
+                <div
+                  style="font-size:clamp(6px,.8vw,9px);color:rgba(255,255,255,.5);margin-bottom:10px;max-width:320px;">
+                  Standar pengukuran performa kolaborasi antar-instansi berbasis data untuk mewujudkan tata kelola yang
+                  tangkas, terpadu, dan berkelanjutan.</div>
+                <div style="display:flex;gap:5px;">
+                  <div
+                    style="background:var(--blue);color:#fff;font-size:clamp(6px,.8vw,9px);font-weight:600;padding:clamp(4px,.6%,8px) clamp(10px,1.5%,18px);">
+                    Mulai Asesmen →</div>
+                  <div
+                    style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:clamp(6px,.8vw,9px);font-weight:600;padding:clamp(4px,.6%,8px) clamp(10px,1.5%,18px);">
+                    Tentang CGMI</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 7: LANGKAH 2 – Data Diri ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 6 – Langkah 2: Klik Mulai Asesmen</div>
+      <div class="slide s-step" id="s-step2">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span class="r-nav-link">Tentang</span><span
+              class="r-nav-link active">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div
+          style="padding:clamp(6px,1%,14px) clamp(10px,1.8%,22px);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;">
+          <div class="s-step-num">2</div>
+          <div class="s-step-title">Klik "Mulai Asesmen" – Halaman Kuesioner CGMI</div>
+        </div>
+        <div class="s-step-body">
+          <div class="s-step-left">
+            <div class="s-step-desc">Klik menu <strong style="color:#fff;">Mulai Asesmen</strong> pada navbar, atau klik
+              tombol <strong style="color:#fff;">Mulai Asesmen</strong> di halaman beranda. Anda akan diarahkan ke
+              halaman Kuesioner CGMI.</div>
+            <ul class="s-step-list">
+              <li><span class="nb">1</span><span>Klik <strong style="color:#fff;">Mulai Asesmen</strong> pada navbar
+                  bagian atas halaman</span></li>
+              <li><span class="nb">2</span><span>Atau klik tombol biru <strong style="color:#fff;">Mulai Asesmen
+                    →</strong> di halaman beranda</span></li>
+              <li><span class="nb">3</span><span>Halaman Kuesioner CGMI akan tampil dengan judul <em
+                    style="color:rgba(255,255,255,.7);">"Kuesioner CGMI"</em></span></li>
+            </ul>
+            <div class="callout callout-warn">
+              <div class="callout-t warn">⚠️ Penting</div>
+              <div class="callout-d">Asesmen hanya dapat dilakukan satu kali per responden. Pastikan kondisi siap
+                sebelum mengisi.</div>
+            </div>
+          </div>
+          <div class="s-step-right">
+            <!-- Replica assessment header card -->
+            <div style="background:var(--surf1);display:flex;flex-direction:column;gap:5px;">
+              <div class="c-card">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                  <div>
+                    <div class="c-card-title">Kuesioner CGMI</div>
+                    <div class="c-card-desc">Isi instrumen dengan memilih skala kesetujuan yang paling mencerminkan
+                      kondisi riil organisasi Anda.</div>
+                  </div>
+                  <div class="c-badge-blue">6 Dimensi Kolaborasi</div>
+                </div>
+                <div class="c-progress-wrap">
+                  <div class="c-progress-label"><span>Progres Asesmen</span><span>0% Terjawab</span></div>
+                  <div class="c-progress-track">
+                    <div class="c-progress-fill" style="width:0%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="c-card" style="padding:clamp(6px,1%,14px);">
+                <div class="c-section-title">Data Diri Responden</div>
+                <div class="c-grid3">
+                  <div>
+                    <div class="c-field-label">Instansi / OPD</div>
+                    <div class="c-select">-- Pilih Instansi -- ▾</div>
+                  </div>
+                  <div>
+                    <div class="c-field-label">Lama Bekerja</div>
+                    <div class="c-select">-- Pilih Lama Bekerja -- ▾</div>
+                  </div>
+                  <div>
+                    <div class="c-field-label">Bidang</div>
+                    <div class="c-input-text">Contoh: Bidang Perencanaan</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 8: LANGKAH 3 – Isi Data Diri ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 7 – Langkah 3: Isi Data Diri Responden</div>
+      <div class="slide s-step" id="s-step3">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span class="r-nav-link">Tentang</span><span
+              class="r-nav-link active">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div
+          style="padding:clamp(6px,1%,14px) clamp(10px,1.8%,22px);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;">
+          <div class="s-step-num">3</div>
+          <div class="s-step-title">Isi Data Diri Responden</div>
+        </div>
+        <div class="s-step-body">
+          <div class="s-step-left">
+            <div class="s-step-desc">Sebelum menjawab pertanyaan, lengkapi bagian <strong style="color:#fff;">Data Diri
+                Responden</strong> yang terdapat di atas formulir kuesioner.</div>
+            <ul class="s-step-list">
+              <li><span class="nb">1</span><span>Pilih <strong style="color:#fff;">Instansi / OPD</strong> dari daftar
+                  dropdown yang tersedia (pilih instansi tempat Anda bekerja)</span></li>
+              <li><span class="nb">2</span><span>Pilih <strong style="color:#fff;">Lama Bekerja</strong> dari dropdown
+                  (&lt;1 Tahun, 1-3 Tahun, 3-5 Tahun, 5-10 Tahun, &gt;10 Tahun)</span></li>
+              <li><span class="nb">3</span><span>Isi kolom <strong style="color:#fff;">Bidang</strong> dengan nama
+                  bidang jabatan Anda (contoh: Bidang Perencanaan)</span></li>
+              <li><span class="nb">4</span><span>Pastikan semua kolom data diri terisi sebelum lanjut menjawab
+                  pertanyaan</span></li>
+            </ul>
+            <div class="callout callout-err">
+              <div class="callout-t err">⛔ Wajib Diisi</div>
+              <div class="callout-d">Data diri tidak boleh kosong. Formulir tidak dapat dikirim jika data diri belum
+                diisi seluruhnya.</div>
+            </div>
+          </div>
+          <div class="s-step-right">
+            <!-- Replica filled data diri -->
+            <div style="background:var(--surf1);display:flex;flex-direction:column;gap:4px;">
+              <div class="c-card" style="padding:clamp(6px,1%,14px);">
+                <div class="c-section-title">Data Diri Responden</div>
+                <div class="c-grid3" style="margin-top:clamp(6px,1%,12px);">
+                  <div>
+                    <div class="c-field-label">Instansi / OPD <span style="color:red;">*</span></div>
+                    <div
+                      style="border:0;border-bottom:2px solid var(--blue);background:var(--surf1);padding:clamp(3px,.5%,6px) 0;font-size:clamp(6px,.8vw,9px);color:var(--ink);font-weight:600;">
+                      Dinas Pendidikan</div>
+                  </div>
+                  <div>
+                    <div class="c-field-label">Lama Bekerja <span style="color:red;">*</span></div>
+                    <div
+                      style="border:0;border-bottom:2px solid var(--blue);background:var(--surf1);padding:clamp(3px,.5%,6px) 0;font-size:clamp(6px,.8vw,9px);color:var(--ink);font-weight:600;">
+                      5-10 Tahun</div>
+                  </div>
+                  <div>
+                    <div class="c-field-label">Bidang <span style="color:red;">*</span></div>
+                    <div
+                      style="border:0;border-bottom:2px solid var(--blue);background:transparent;padding:clamp(3px,.5%,6px) 0;font-size:clamp(6px,.8vw,9px);color:var(--ink);font-weight:600;">
+                      Bidang Perencanaan</div>
+                  </div>
+                </div>
+              </div>
+              <!-- annotation arrows -->
+              <div style="display:flex;gap:4px;padding:clamp(4px,.6%,8px);">
+                <div
+                  style="flex:1;background:rgba(15,98,254,.08);border:1px solid rgba(15,98,254,.2);padding:clamp(3px,.5%,6px);text-align:center;">
+                  <div style="font-size:clamp(10px,1.8vw,22px);">🏛️</div>
+                  <div style="font-size:clamp(5px,.6vw,7px);color:rgba(255,255,255,.6);margin-top:2px;">Pilih Instansi
+                  </div>
+                </div>
+                <div
+                  style="flex:1;background:rgba(15,98,254,.08);border:1px solid rgba(15,98,254,.2);padding:clamp(3px,.5%,6px);text-align:center;">
+                  <div style="font-size:clamp(10px,1.8vw,22px);">🕐</div>
+                  <div style="font-size:clamp(5px,.6vw,7px);color:rgba(255,255,255,.6);margin-top:2px;">Lama Bekerja
+                  </div>
+                </div>
+                <div
+                  style="flex:1;background:rgba(15,98,254,.08);border:1px solid rgba(15,98,254,.2);padding:clamp(3px,.5%,6px);text-align:center;">
+                  <div style="font-size:clamp(10px,1.8vw,22px);">💼</div>
+                  <div style="font-size:clamp(5px,.6vw,7px);color:rgba(255,255,255,.6);margin-top:2px;">Bidang Jabatan
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 9: LANGKAH 4 – Isi Kuesioner ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 8 – Langkah 4: Mengisi Kuesioner</div>
+      <div class="slide s-step" id="s-step4">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span class="r-nav-link">Tentang</span><span
+              class="r-nav-link active">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div
+          style="padding:clamp(6px,1%,14px) clamp(10px,1.8%,22px);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;">
+          <div class="s-step-num">4</div>
+          <div class="s-step-title">Mengisi Kuesioner – 30 Pertanyaan, 6 Dimensi</div>
+        </div>
+        <div class="s-step-body">
+          <div class="s-step-left">
+            <div class="s-step-desc">Jawab setiap pertanyaan dengan memilih <strong style="color:#fff;">skala Likert
+                1–5</strong> yang paling menggambarkan kondisi riil instansi saat ini.</div>
+            <ul class="s-step-list">
+              <li><span class="nb">1</span><span>Baca pertanyaan dengan seksama sebelum memilih jawaban</span></li>
+              <li><span class="nb">2</span><span>Klik salah satu dari 5 opsi: <em
+                    style="color:rgba(255,255,255,.7);">Sangat Tidak Setuju (1)</em> hingga <em
+                    style="color:rgba(255,255,255,.7);">Sangat Setuju (5)</em></span></li>
+              <li><span class="nb">3</span><span>Pantau <strong style="color:#fff;">progress bar</strong> di atas untuk
+                  memantau kemajuan pengisian</span></li>
+              <li><span class="nb">4</span><span>Ulangi untuk semua 30 pertanyaan di 6 dimensi yang tersedia</span></li>
+            </ul>
+            <div class="callout callout-info">
+              <div class="callout-t info">📌 Informasi</div>
+              <div class="callout-d">Isi berdasarkan kondisi riil, bukan kondisi yang diharapkan. Kejujuran menghasilkan
+                rekomendasi yang lebih tepat.</div>
+            </div>
+          </div>
+          <div class="s-step-right">
+            <!-- Replica question card -->
+            <div style="background:var(--surf1);display:flex;flex-direction:column;gap:clamp(4px,.6%,8px);">
+              <div style="background:#fff;border:1px solid var(--surf2);padding:clamp(4px,.6%,10px);">
+                <div class="c-section-title" style="margin-bottom:clamp(5px,.8%,10px);">DIMENSI: KEPEMIMPINAN</div>
+                <div class="c-q-card">
+                  <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:clamp(5px,.8%,10px);">
+                    <div class="c-q-num">1</div>
+                    <div class="c-q-text">Pimpinan organisasi secara aktif mendorong kerja sama antar instansi dalam
+                      setiap kebijakan yang dibuat.</div>
+                  </div>
+                  <div class="c-likert">
+                    <div class="c-likert-opt">
+                      <div class="c-likert-radio"></div>
+                      <div class="c-likert-label">Sangat Tidak Setuju</div>
+                      <div class="c-likert-val">1</div>
+                    </div>
+                    <div class="c-likert-opt">
+                      <div class="c-likert-radio"></div>
+                      <div class="c-likert-label">Tidak Setuju</div>
+                      <div class="c-likert-val">2</div>
+                    </div>
+                    <div class="c-likert-opt">
+                      <div class="c-likert-radio"></div>
+                      <div class="c-likert-label">Netral</div>
+                      <div class="c-likert-val">3</div>
+                    </div>
+                    <div class="c-likert-opt selected">
+                      <div class="c-likert-radio checked"></div>
+                      <div class="c-likert-label" style="color:var(--blue);">Setuju</div>
+                      <div class="c-likert-val" style="color:var(--blue);">4</div>
+                    </div>
+                    <div class="c-likert-opt">
+                      <div class="c-likert-radio"></div>
+                      <div class="c-likert-label">Sangat Setuju</div>
+                      <div class="c-likert-val">5</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="background:#fff;border:1px solid var(--surf2);padding:clamp(4px,.6%,8px);display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-size:clamp(5px,.65vw,8px);color:var(--ink-m);">Pastikan seluruh pertanyaan telah
+                  dijawab sebelum mengirimkan formulir.</div>
+                <div
+                  style="background:var(--blue);color:#fff;font-size:clamp(6px,.8vw,9px);font-weight:600;padding:clamp(4px,.6%,7px) clamp(8px,1.2%,16px);">
+                  Kirim Asesmen</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 10: LANGKAH 5 – Submit ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 9 – Langkah 5: Kirim Asesmen</div>
+      <div class="slide s-step" id="s-step5">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span class="r-nav-link">Tentang</span><span
+              class="r-nav-link active">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div
+          style="padding:clamp(6px,1%,14px) clamp(10px,1.8%,22px);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;">
+          <div class="s-step-num">5</div>
+          <div class="s-step-title">Kirim Asesmen – Tombol "Kirim Asesmen"</div>
+        </div>
+        <div class="s-step-body">
+          <div class="s-step-left">
+            <div class="s-step-desc">Setelah semua pertanyaan dijawab, gulir ke bawah halaman hingga panel <strong
+                style="color:#fff;">"Kirim Asesmen"</strong> tampil, lalu klik tombol biru.</div>
+            <ul class="s-step-list">
+              <li><span class="nb">1</span><span>Pastikan progress bar menunjukkan <strong style="color:#fff;">100%
+                    Terjawab (30/30)</strong></span></li>
+              <li><span class="nb">2</span><span>Gulir halaman ke bawah hingga panel Kirim Asesmen terlihat</span></li>
+              <li><span class="nb">3</span><span>Klik tombol biru <strong style="color:#fff;">"Kirim
+                    Asesmen"</strong></span></li>
+              <li><span class="nb">4</span><span>Sistem menghitung skor otomatis dan mengarahkan ke Dashboard</span>
+              </li>
+            </ul>
+            <div class="callout callout-ok">
+              <div class="callout-t ok">✅ Berhasil</div>
+              <div class="callout-d">Muncul notifikasi: "Asesmen tata kelola kolaborasi berhasil disimpan!" dan halaman
+                beralih ke Dashboard.</div>
+            </div>
+          </div>
+          <div class="s-step-right">
+            <div style="background:var(--surf1);display:flex;flex-direction:column;gap:clamp(4px,.6%,8px);">
+              <!-- Progress 100% -->
+              <div class="c-card" style="padding:clamp(6px,1%,12px);">
+                <div class="c-progress-label"><span>Progres Asesmen</span><span
+                    style="color:var(--success);font-weight:700;">100% Terjawab (30/30)</span></div>
+                <div class="c-progress-track">
+                  <div class="c-progress-fill" style="width:100%;background:var(--success);"></div>
+                </div>
+              </div>
+              <!-- Submit panel replica -->
+              <div class="c-submit-panel">
+                <div class="c-submit-desc">Pastikan seluruh pertanyaan telah dijawab sebelum mengirimkan formulir. Hasil
+                  akan dihitung secara otomatis setelah pengiriman.</div>
+                <div class="c-btn-blue">Kirim Asesmen</div>
+              </div>
+              <!-- Success toast replica -->
+              <div
+                style="background:#fff;border:1px solid var(--surf2);border-left:4px solid var(--success);padding:clamp(5px,.8%,10px) clamp(8px,1.2%,16px);display:flex;align-items:center;gap:6px;">
+                <div style="font-size:clamp(10px,1.5vw,18px);">✅</div>
+                <div style="font-size:clamp(6px,.8vw,9px);color:var(--ink);font-weight:600;">Asesmen tata kelola
+                  kolaborasi berhasil disimpan!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 11: LANGKAH 6 – Dashboard ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 10 – Langkah 6: Melihat Dashboard Hasil</div>
+      <div class="slide s-step" id="s-step6">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span class="r-nav-link">Tentang</span><span
+              class="r-nav-link">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div
+          style="padding:clamp(6px,1%,14px) clamp(10px,1.8%,22px);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;">
+          <div class="s-step-num">6</div>
+          <div class="s-step-title">Dashboard Hasil – Skor, Level Kematangan, & Rekomendasi</div>
+        </div>
+        <div class="s-step-body" style="grid-template-columns:1fr 1.4fr;">
+          <div class="s-step-left">
+            <div class="s-step-desc">Setelah submit berhasil, halaman <strong style="color:#fff;">Dashboard</strong>
+              menampilkan hasil lengkap pengukuran kematangan tata kelola kolaborasi.</div>
+            <ul class="s-step-list">
+              <li><span class="nb">1</span><span><strong style="color:#fff;">Skor Indeks Rata-rata</strong> – Nilai
+                  keseluruhan (skala 1.00–5.00)</span></li>
+              <li><span class="nb">2</span><span><strong style="color:#fff;">Level Kematangan</strong> – Level 1 (Ad
+                  Hoc) sampai Level 5 (Optimized)</span></li>
+              <li><span class="nb">3</span><span><strong style="color:#fff;">Radar Chart</strong> – Visualisasi grafis
+                  skor 6 dimensi</span></li>
+              <li><span class="nb">4</span><span><strong style="color:#fff;">Rekomendasi Tindakan</strong> – Arahan per
+                  dimensi sesuai level kematangan</span></li>
+            </ul>
+          </div>
+          <div class="s-step-right">
+            <!-- Replica dashboard dark UI -->
+            <div style="background:var(--dark-bg);display:flex;flex-direction:column;gap:clamp(4px,.6%,8px);flex:1;">
+              <!-- Header bar -->
+              <div style="background:var(--dark-card);border:1px solid var(--dark-border);padding:clamp(5px,.8%,10px);">
+                <div style="font-size:clamp(10px,1.5vw,18px);font-weight:900;color:#fff;">Dinas Pendidikan</div>
+                <div style="font-size:clamp(5px,.65vw,8px);color:var(--dark-muted);margin-top:2px;">Asesmen disubmit
+                  pada: 25 Juni 2026, 10:30:00</div>
+              </div>
+              <!-- Score + radar row -->
+              <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(4px,.6%,8px);">
+                <!-- Score card -->
+                <div class="d-card">
+                  <div class="d-card-label">Skor Indeks Rata-rata</div>
+                  <div style="display:flex;align-items:baseline;gap:4px;margin-top:2px;">
+                    <div class="d-card-big">3.78</div>
+                    <div class="d-card-unit">/ 5.00</div>
+                  </div>
+                  <div class="d-maturity-badge lv4">Level 4 – Integrated 🔵</div>
+                  <div class="d-desc-box" style="margin-top:5px;">
+                    <div class="d-desc-title">Deskripsi Tingkat Kematangan:</div>
+                    <div class="d-desc-text">Kolaborasi terintegrasi dengan baik dan diukur menggunakan metrik yang
+                      jelas.</div>
+                  </div>
+                </div>
+                <!-- Recommendations preview -->
+                <div class="d-card" style="padding:clamp(5px,.8%,10px);">
+                  <div
+                    style="font-size:clamp(7px,.9vw,10px);font-weight:700;color:#fff;border-bottom:1px solid var(--dark-border);padding-bottom:4px;margin-bottom:5px;">
+                    Rekomendasi Tindakan</div>
+                  <div class="d-rec-item" style="border-left:2px solid #3b82f6;">
+                    <div class="d-rec-head"><span class="d-rec-icon">👥</span><span
+                        class="d-rec-name">Kepemimpinan</span><span
+                        style="margin-left:auto;font-size:clamp(4px,.55vw,7px);padding:1px 5px;background:rgba(59,130,246,.2);color:#93c5fd;border:1px solid #3b82f6;">Lv.4
+                        · 4.20</span></div>
+                    <div class="d-rec-text">Perkuat sinkronisasi visi jangka panjang antar pimpinan melalui forum
+                      strategis berkala.</div>
+                  </div>
+                  <div class="d-rec-item" style="border-left:2px solid #eab308;">
+                    <div class="d-rec-head"><span class="d-rec-icon">🛡️</span><span class="d-rec-name">Manajemen
+                        Risiko</span><span
+                        style="margin-left:auto;font-size:clamp(4px,.55vw,7px);padding:1px 5px;background:rgba(234,179,8,.15);color:#fde047;border:1px solid #eab308;">Lv.3
+                        · 3.20</span></div>
+                    <div class="d-rec-text">Terapkan penilaian risiko kolaboratif secara periodik dengan standarisasi
+                      protokol respons.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 12: CATATAN PENTING ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 11 – Catatan Penting</div>
+      <div class="slide" id="s-notes">
+        <div class="r-nav">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span class="r-nav-link">Tentang</span><span
+              class="r-nav-link">Mulai Asesmen</span></div>
+          <div class="r-nav-btn">Masuk Admin</div>
+        </div>
+        <div style="padding:clamp(6px,1%,14px) clamp(10px,1.8%,22px);border-bottom:1px solid rgba(255,255,255,.06);">
+          <div class="s-step-title">⚠️ Catatan Penting Sebelum Mengisi Asesmen</div>
+        </div>
+        <div class="notes-body">
+          <div class="note-card y">
+            <div class="note-icon">📝</div>
+            <div class="note-title">Satu Kali Pengisian</div>
+            <div class="note-text">Setiap responden hanya dapat mengisi kuesioner CGMI satu kali. Pastikan seluruh
+              jawaban sudah benar dan final sebelum mengirimkan, karena tidak dapat diubah setelah pengiriman.</div>
+          </div>
+          <div class="note-card g">
+            <div class="note-icon">✅</div>
+            <div class="note-title">Jawab Semua 30 Pertanyaan</div>
+            <div class="note-text">Seluruh 30 pertanyaan (5 per dimensi × 6 dimensi) wajib dijawab. Formulir tidak dapat
+              dikirimkan jika masih ada pertanyaan yang belum terjawab. Pantau progress bar untuk memantau kemajuan
+              pengisian Anda.</div>
+          </div>
+          <div class="note-card b">
+            <div class="note-icon">🌐</div>
+            <div class="note-title">Koneksi Internet Stabil</div>
+            <div class="note-text">Pastikan koneksi internet stabil selama pengisian berlangsung. Jika koneksi terputus
+              sebelum pengiriman, data jawaban belum tersimpan dan pengisian harus diulang dari awal kembali.</div>
+          </div>
+          <div class="note-card p">
+            <div class="note-icon">📊</div>
+            <div class="note-title">Isi Berdasarkan Kondisi Riil</div>
+            <div class="note-text">Jawab pertanyaan berdasarkan kondisi riil instansi Anda saat ini, bukan kondisi yang
+              diharapkan atau dicita-citakan. Kejujuran dalam pengisian akan menghasilkan rekomendasi tindakan yang
+              lebih akurat dan tepat sasaran.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SLIDE 13: THANK YOU ═══════ -->
+    <div class="slide-wrap">
+      <div class="slide-label">Slide 12 – Penutup</div>
+      <div class="slide" id="s-ty">
+        <div class="r-nav" style="position:absolute;top:0;left:0;right:0;z-index:2;background:rgba(0,80,230,.4);">
+          <div class="r-nav-brand">
+            <div class="logo">▣</div><span class="name">CGMI</span>
+            <div class="sep"></div><span class="sub">Collaboration Governance Maturity Index</span>
+          </div>
+          <div class="r-nav-links"><span class="r-nav-link">Beranda</span><span class="r-nav-link">Tentang</span><span
+              class="r-nav-link">Mulai Asesmen</span></div>
+          <div class="r-nav-btn" style="background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.3);">Masuk Admin
+          </div>
+        </div>
+        <div class="ty-h">TERIMA KASIH</div>
+        <div class="ty-line"></div>
+        <div class="ty-sub">Panduan ini disusun untuk memudahkan penggunaan CGMI Assessment App dalam rangka pengukuran
+          tata kelola kolaborasi instansi pemerintah daerah Kabupaten Sumedang.</div>
+        <div class="ty-url">🌐 cgmi-assessmentt.web.app</div>
+        <div style="font-size:clamp(7px,.9vw,10px);color:rgba(255,255,255,.4);position:relative;">Versi 1.0 · 2026 ·
+          Collaboration Governance Maturity Index</div>
+      </div>
+    </div>
+
+  </div><!-- /slides -->
+</body>
+
+</html>

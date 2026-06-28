@@ -8,7 +8,7 @@
  */
 export function assessmentsToCsv(assessments) {
   const headers = [
-    'No', 'Nama', 'Organisasi', 'Tanggal Submisi',
+    'No', 'Bidang', 'Instansi', 'Lama Bekerja', 'Tanggal Submisi',
     'Kepemimpinan', 'Pengambilan Keputusan', 'Transparansi',
     'Manajemen Risiko', 'Pengelolaan Sumber Daya', 'Kinerja dan Evaluasi',
     'Rata-Rata Total', 'Level Kematangan',
@@ -24,6 +24,7 @@ export function assessmentsToCsv(assessments) {
       i + 1,
       `"${a.userName || '-'}"`,
       `"${a.organization || '-'}"`,
+      `"${a.lamaBekerja || '-'}"`,
       date,
       spd['Kepemimpinan']           ?? 0,
       spd['Pengambilan Keputusan']  ?? 0,
